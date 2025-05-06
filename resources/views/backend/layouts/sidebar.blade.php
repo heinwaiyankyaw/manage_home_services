@@ -5,11 +5,11 @@
           <ul class="navbar-nav theme-brand flex-row  text-center">
               <li class="nav-item theme-logo">
                   <a href="index.html">
-                      <img src="{{ asset('backend/assets/img/logo.jpeg') }}" class="navbar-logo" alt="logo">
+                      <img src="{{ asset('backend/assets/img/logo.png') }}" class="navbar-logo" alt="logo">
                   </a>
               </li>
               <li class="nav-item theme-text">
-                  <a href="index.html" class="nav-link"> HopeHands </a>
+                  <a href="index.html" class="nav-link"> HomeEase </a>
               </li>
           </ul>
 
@@ -43,17 +43,33 @@
                       </li>
                   </ul>
               </li>
-
-              <li class="menu menu-heading">
-                  <div class="heading"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                          stroke-linecap="round" stroke-linejoin="round" class="feather feather-circle">
-                          <circle cx="12" cy="12" r="10"></circle>
-                      </svg><span>Apps</span></div>
+              <li class="menu">
+                  <a href="#adminManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                      <div class="">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round" class="feather feather-shield">
+                              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                          </svg>
+                          <span>User Management</span>
+                      </div>
+                      <div>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round" class="feather feather-chevron-right">
+                              <polyline points="9 18 15 12 9 6"></polyline>
+                          </svg>
+                      </div>
+                  </a>
+                  <ul class="collapse submenu list-unstyled" id="adminManagement" data-parent="#accordionExample">
+                      <li><a href="{{ route('admin.admins.list') }}">Admins</a></li>
+                      <li><a href="{{ route('admin.providers.list') }}">Providers</a></li>
+                      <li><a href="{{ route('admin.users.list') }}">Users</a></li>
+                  </ul>
               </li>
 
               <li class="menu">
-                  <a href="apps_chat.html" aria-expanded="false" class="dropdown-toggle">
+                  <a href="{{ route('admin.category.list') }}" aria-expanded="false" class="dropdown-toggle">
                       <div class="">
                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

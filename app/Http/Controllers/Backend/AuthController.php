@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\AuthLoginRequest;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -11,9 +12,14 @@ class AuthController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function login()
+
+    public function login($slugName)
     {
-        return view('backend.pages.Auth.login');
+        if ($slugName == 'admin' || $slugName == 'provider') {
+            return view('backend.pages.Auth.login', compact('slugName'));
+        }
+
+        return abort(404);
     }
 
     /**
@@ -22,13 +28,27 @@ class AuthController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function loginPost(AuthLoginRequest $request)
+    public function loginPost(AuthLoginRequest $request, $slugName)
     {
         // Validate the request
-        $request->validated();
+        $data = $request->validated();
+        Auth::attempt(['email' => $data['email'], 'password' => $data['password']]);
+        // Check if the user is authenticated
+        if (! Auth::check()) {
+            return redirect()->back()->withErrors(['email' => 'Invalid credentials'])->withInput();
+        }
+        // Check the user's role and redirect accordingly
+        $user = Auth::user();
 
         // Redirect to the dashboard after successful login
-        return redirect()->route('admin.dashboard');
+        if ($slugName == 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($slugName == 'provider') {
+            return redirect()->route('provider.dashboard');
+        } else {
+            return abort(404);
+        }
+
     }
 
     /**
@@ -36,11 +56,19 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function logout()
+    public function adminlogout()
     {
         // Handle the logout logic here
         // For example, log out the user and redirect to the login page
-
+        Auth::logout();
         return redirect()->route('admin.login');
+    }
+
+    public function providerlogout()
+    {
+        // Handle the logout logic here
+        // For example, log out the user and redirect to the login page
+        Auth::logout();
+        return redirect()->route('provider.login');
     }
 }

@@ -60,10 +60,12 @@
                 <div class="form-container">
                     <div class="form-content">
 
-                        <h1 class="">Log In to <a href="{{ route('admin.login') }}"><span class="brand-name"
+                        <h1 class="">Log In to <a
+                                href="{{ route('admin.login', ['slugname' => $slugName]) }}"><span class="brand-name"
                                     style="color:#4DB6AC;">HomeEase</span></a>
                         </h1>
-                        <form class="text-left" action="{{ route('admin.login.post') }}" method="POST">
+                        <form class="text-left" action="{{ route('admin.login.post', ['slugname' => $slugName]) }}"
+                            method="POST">
                             @csrf
                             <div class="form">
                                 @if (session('status'))
@@ -84,9 +86,9 @@
                                         <input id="email" name="email" type="text" class="form-control"
                                             placeholder="Email">
                                         @error('email')
-                                            <div class="alert alert-danger mt-2">
+                                            <span class="text-danger mt-2">
                                                 {{ $message }}
-                                            </div>
+                                            </span>
                                         @enderror
                                     </div>
 
@@ -102,9 +104,9 @@
                                         <input id="password" name="password" type="password" class="form-control"
                                             placeholder="Password">
                                         @error('password')
-                                            <div class="alert alert-danger mt-2">
+                                            <span class="text-danger mt-2">
                                                 {{ $message }}
-                                            </div>
+                                            </span>
                                         @enderror
                                     </div>
                                     <div class="d-sm-flex justify-content-between">
@@ -125,7 +127,8 @@
                                 </div>
                         </form>
                         <p class="terms-conditions">© {{ Carbon::now()->format('Y') }} All Rights Reserved. <a
-                                href="{{ route('admin.login') }}" style="color:#4DB6AC;">HomeEase</a> is a
+                                href="{{ route('admin.login', ['slugname' => $slugName]) }}"
+                                style="color:#4DB6AC;">HomeEase</a> is a
                             product of Designreset. <a href="javascript:void(0);" style="color:#4DB6AC;">Cookie
                                 Preferences</a>, <a href="javascript:void(0);" style="color:#4DB6AC;">Privacy</a>, and
                             <a href="javascript:void(0);" style="color:#4DB6AC;">Terms</a>.

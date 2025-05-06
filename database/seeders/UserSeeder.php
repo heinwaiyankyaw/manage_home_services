@@ -66,6 +66,17 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'name'       => 'user',
+                'username'   => 'user1',
+                'email'      => 'user@example.com',
+                'address'    => '789 Jalan Kabel, Penang',
+                'password'   => Hash::make('password123'),
+                'status'     => 'active',
+                'role_id'    => 4,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
 
         foreach ($datas as $data) {
