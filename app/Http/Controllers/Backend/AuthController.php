@@ -58,17 +58,13 @@ class AuthController extends Controller
      */
     public function adminlogout()
     {
-        // Handle the logout logic here
-        // For example, log out the user and redirect to the login page
         Auth::logout();
-        return redirect()->route('admin.login');
+        return redirect()->route('admin.login', ['slugname' => 'admin']);
     }
 
     public function providerlogout()
     {
-        // Handle the logout logic here
-        // For example, log out the user and redirect to the login page
         Auth::logout();
-        return redirect()->route('provider.login');
+        return redirect()->route('admin.login', ['slugname' => 'provider']);
     }
 }

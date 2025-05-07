@@ -3,9 +3,15 @@
 use App\Http\Controllers\Backend\AdminCategoryController;
 use App\Http\Controllers\Backend\AdminManagementController;
 use App\Http\Controllers\Backend\AuthController;
+use App\Http\Controllers\Backend\BookingController;
+use App\Http\Controllers\Backend\ComplaintController;
 use App\Http\Controllers\Backend\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Backend\PaymentController;
 use App\Http\Controllers\Backend\ProviderManagementController;
+use App\Http\Controllers\Backend\ReviewController;
+use App\Http\Controllers\Backend\ServiceController;
 use App\Http\Controllers\Backend\UserManagementController;
+use App\Http\Controllers\Backend\WalletController as AdminWalletController;
 use App\Http\Controllers\Provider\DashboardController as ProviderDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -53,11 +59,66 @@ Route::prefix('admin')->group(function () {
         Route::post('delete/{id}', [AdminCategoryController::class, 'categoryDelete'])->name('admin.category.delete');
     });
 
+    Route::prefix('wallet')->group(function () {
+        Route::get('list', [AdminWalletController::class, 'walletList'])->name('admin.wallets.list');
+        Route::get('view/{id}', [AdminWalletController::class, 'walletView'])->name('admin.wallets.view');
+        Route::post('status/{id}', [AdminWallletController::class, 'walletStatus'])->name('admin.wallets.status');
+    });
+
     Route::post('logout', [AuthController::class, 'adminlogout'])->name('admin.logout');
 });
 
 Route::prefix('provider')->group(function () {
     Route::get('dashboard', [ProviderDashboardController::class, 'index'])->name('provider.dashboard');
 
-    Route::post('logout', [AuthController::class, 'adminlogout'])->name('provider.logout');
+    Route::prefix('wallet')->group(function () {
+        Route::get('list', [AdminWalletController::class, 'providerWalletList'])->name('provider.wallets.list');
+        Route::get('create', [AdminWalletController::class, 'providerWalletCreate'])->name('provider.wallets.create');
+        Route::post('store', [AdminWalletController::class, 'providerWalletStore'])->name('provider.wallets.store');
+        Route::get('view/{id}', [AdminWalletController::class, 'providerWalletView'])->name('provider.wallets.view');
+        Route::post('update/{id}', [AdminWalletController::class, 'providerWalletUpdate'])->name('provider.wallets.update');
+        Route::post('delete/{id}', [AdminWalletController::class, 'providerWalletDelete'])->name('provider.wallets.delete');
+    });
+
+    Route::prefix('users')->group(function () {
+        Route::get('list', [UserManagementController::class, 'userList'])->name('provider.users.list');
+        Route::get('view/{id}', [UserManagementController::class, 'userView'])->name('provider.users.view');
+        Route::post('status/{id}', [UserManagementController::class, 'userStatus'])->name('provider.users.ban');
+        // Route::post('delete/{id}', [UserManagementController::class, 'userDelete'])->name('admin.users.delete');
+    });
+
+    Route::prefix('services')->group(function () {
+        Route::get('list', [ServiceController::class, 'providerServiceList'])->name('provider.services.list');
+        Route::get('create', [ServiceController::class, 'providerServiceCreate'])->name('provider.services.create');
+        Route::post('store', [ServiceController::class, 'providerServiceStore'])->name('provider.services.store');
+        Route::get('edit/{id}', [ServiceController::class, 'providerServiceEdit'])->name('provider.services.edit');
+        Route::post('update/{id}', [ServiceController::class, 'providerServiceUpdate'])->name('provider.services.update');
+        Route::post('delete/{id}', [ServiceController::class, 'providerServiceDelete'])->name('provider.services.delete');
+    });
+
+    Route::prefix('bookings')->group(function () {
+        Route::get('list', [BookingController::class, 'providerBookingList'])->name('provider.bookings.list');
+        Route::get('{id}', [BookingController::class, 'providerBookingView'])->name('provider.bookings.view');
+        Route::post('status/{id}', [BookingController::class, 'providerBookingStatus'])->name('provider.bookings.status');
+        Route::post('reject/{id}', [BookingController::class, 'providerBookingReject'])->name('provider.bookings.reject');
+    });
+
+    Route::prefix('payments')->group(function () {
+        Route::get('list', [PaymentController::class, 'providerPaymentList'])->name('provider.payments.list');
+        Route::post('status/{id}', [PaymentController::class, 'providerPaymentStatus'])->name('provider.payments.status');
+        Route::post('reject/{id}', [PaymentController::class, 'providerPaymentReject'])->name('provider.payments.reject');
+
+    });
+
+    Route::prefix('reviews')->group(function () {
+        Route::get('list', [ReviewController::class, 'providerReviewList'])->name('provider.reviews.list');
+    });
+
+    Route::prefix('complaints')->group(function () {
+        Route::get('list', [ComplaintController::class, 'providerComplaintList'])->name('provider.complaints.list');
+        Route::post('status/{id}', [ComplaintController::class, 'providerComplaintStatus'])->name('provider.complaints.status');
+        Route::post('close/{id}', [ComplaintController::class, 'providerComplaintReject'])->name('provider.complaints.reject');
+    });
+
+    Route::post('logout', [AuthController::class, 'providerLogout'])->name('provider.logout');
 });

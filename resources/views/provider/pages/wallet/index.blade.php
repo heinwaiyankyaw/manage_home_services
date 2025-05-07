@@ -2,9 +2,12 @@
 @section('content')
     <div class="row align-items-center my-4">
         <div class="col-md-6">
-            <h3 class="mb-0 font-weight-bold">Users</h3>
+            <h3 class="mb-0 font-weight-bold">Wallets</h3>
         </div>
         <div class="col-md-6 text-md-right">
+            <a href="{{ route('provider.wallets.create') }}" class="btn btn-primary px-4">
+                <i class="fas fa-plus mr-2"></i>Add Wallet
+            </a>
         </div>
     </div>
 
@@ -16,58 +19,43 @@
                     <table id="zero-config" class="table table-hover" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>UserName</th>
                                 <th>Email</th>
+                                <th>Wallet Name</th>
                                 <th>Status</th>
                                 <th class="no-content"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($users as $user)
+                            @foreach ($wallets as $wallet)
                                 <tr>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $wallet->user->name }}</td>
+                                    <td>{{ $wallet->user->email }}</td>
+                                    <td>{{ $wallet->name }}</td>
                                     <td>
-                                        @if ($user->status == 'active')
+                                        @if ($wallet->status == 'active')
                                             <span class="badge badge-success">Active</span>
                                         @else
                                             <span class="badge badge-danger">Inactive</span>
                                         @endif
                                     </td>
                                     <td>
-                                        @if (auth()->user()->role->name == 'Service Provider')
-                                            -
-                                        @else
-                                            <!-- Edit Button with SweetAlert Confirmation -->
-                                            <button type="button" class="btn btn-primary btn-sm edit-btn" title="Edit"
-                                                data-edit-url="{{ route('admin.users.view', $user->id) }}">
-                                                <i class="fas fa-edit"></i>
+                                        <!-- Edit Button with SweetAlert Confirmation -->
+                                        <button type="button" class="btn btn-primary btn-sm edit-btn" title="Edit"
+                                            data-edit-url="{{ route('provider.wallets.view', $wallet->id) }}">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+
+                                        <!-- Delete Button with SweetAlert (Improved) -->
+                                        <form action="{{ route('provider.wallets.delete', $wallet->id) }}" method="POST"
+                                            id="delete-form-{{ $wallet->id }}" class="d-inline">
+                                            @csrf
+                                            @method('POST')
+                                            <button type="button" class="btn btn-danger btn-sm delete-btn" title="Delete"
+                                                data-id="{{ $wallet->id }}">
+                                                <i class="fas fa-trash"></i>
                                             </button>
-
-                                            <!-- Delete Button with SweetAlert (Improved) -->
-                                            @if ($user->status == 'active')
-                                                <form action="{{ route('admin.users.ban', $user->id) }}" method="POST"
-                                                    id="delete-form-{{ $user->id }}" class="d-inline">
-                                                    @csrf
-                                                    @method('POST')
-                                                    <button type="button" class="btn btn-danger btn-sm delete-btn"
-                                                        title="Ban" data-id="{{ $user->id }}">
-                                                        <i class="fas fa-ban"></i>
-                                                    </button>
-                                                </form>
-                                            @else
-                                                <form action="{{ route('admin.users.ban', $user->id) }}" method="POST"
-                                                    id="delete-form-{{ $user->id }}" class="d-inline">
-                                                    @csrf
-                                                    @method('POST')
-                                                    <button type="button" class="btn btn-success btn-sm delete-btn"
-                                                        title="UnBan" data-id="{{ $user->id }}">
-                                                        <i class="fas fa-undo"></i>
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        @endif
-
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
@@ -87,7 +75,7 @@
                 const editUrl = $(this).data('edit-url');
 
                 Swal.fire({
-                    title: 'View user?',
+                    title: 'View Wallet?',
                     text: "You'll be redirected to the view page",
                     icon: 'question',
                     showCancelButton: true,
@@ -107,8 +95,8 @@
                 const formId = 'delete-form-' + $(this).data('id');
 
                 Swal.fire({
-                    title: 'Wanna Ban or UnBan this user?',
-                    text: "User Status will be changed.",
+                    title: 'Delete Permanently?',
+                    text: "This cannot be undone!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
