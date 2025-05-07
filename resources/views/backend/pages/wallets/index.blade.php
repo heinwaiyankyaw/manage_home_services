@@ -45,7 +45,7 @@
 
                                         <!-- Delete Button with SweetAlert (Improved) -->
                                         @if ($wallet->status == 'active')
-                                            <form action="{{ route('admin.wallets.ban', $wallet->id) }}" method="POST"
+                                            <form action="{{ route('admin.wallets.status', $wallet->id) }}" method="POST"
                                                 id="delete-form-{{ $wallet->id }}" class="d-inline">
                                                 @csrf
                                                 @method('POST')
@@ -55,7 +55,7 @@
                                                 </button>
                                             </form>
                                         @else
-                                            <form action="{{ route('admin.wallets.ban', $wallet->id) }}" method="POST"
+                                            <form action="{{ route('admin.wallets.status', $wallet->id) }}" method="POST"
                                                 id="delete-form-{{ $wallet->id }}" class="d-inline">
                                                 @csrf
                                                 @method('POST')

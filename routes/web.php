@@ -13,11 +13,17 @@ use App\Http\Controllers\Backend\ServiceController;
 use App\Http\Controllers\Backend\UserManagementController;
 use App\Http\Controllers\Backend\WalletController as AdminWalletController;
 use App\Http\Controllers\Provider\DashboardController as ProviderDashboardController;
+use App\Http\Controllers\User\IndexController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect()->route('admin.login');
-});
+Route::get('/', [IndexController::class, 'index'])->name('user.index');
+Route::get('contact', [IndexController::class, 'contact'])->name('user.contact');
+Route::get('login', [IndexController::class, 'login'])->name('user.login');
+Route::get('register', [IndexController::class, 'register'])->name('user.register');
+Route::post('login', [IndexController::class, 'userLogin'])->name('user.login.post');
+Route::post('register', [IndexController::class, 'userRegister'])->name('user.register.post');
+
+Route::post('logout', [IndexController::class, 'logout'])->name('user.logout');
 
 Route::get('{slugname}/login', [AuthController::class, 'login'])->where(['admin', 'provider'])->name('admin.login');
 Route::post('{slugname}/login', [AuthController::class, 'loginPost'])->name('admin.login.post');
@@ -122,3 +128,8 @@ Route::prefix('provider')->group(function () {
 
     Route::post('logout', [AuthController::class, 'providerLogout'])->name('provider.logout');
 });
+
+Route::get('/services', [IndexController::class, 'servicePage'])->name('user.services.index');
+Route::post('/services/book/{id}', [IndexController::class, 'serviceBooking'])->name('user.services.book');
+Route::get('/bookings', [BookingController::class, 'index'])->name('user.booking');
+Route::post('/bookings/confirm', [BookingController::class, 'confirmBooking'])->name('user.bookings.confirm');
